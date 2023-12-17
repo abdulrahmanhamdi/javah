@@ -19,7 +19,6 @@ public class Level2 extends JPanel {
     ArrayList<Brick> bricks = new ArrayList();
     private boolean inGame = true;
 
-    private Image backgroundImage;
 
 
     public Level2() {
@@ -33,7 +32,7 @@ public class Level2 extends JPanel {
         setPreferredSize(new Dimension(Commons.WIDTH, Commons.HEIGHT));
 
         // Load background image
-        backgroundImage = new ImageIcon("src/resources/back.jpg").getImage();
+        Image backgroundImage = new ImageIcon("src/resources/back.jpg").getImage();
 
         gameInit();
     }
