@@ -1,16 +1,7 @@
 package com.zetcode;
 
-import javax.swing.JPanel;
-import javax.swing.Timer;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.RenderingHints;
-import java.awt.Toolkit;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -27,6 +18,7 @@ public class Level1 extends JPanel {
     private Random random = new Random();
     ArrayList<Brick> bricks = new ArrayList<>();
     private boolean inGame = true;
+    private Image backgroundImage;
 
     public Level1() {
 
@@ -34,11 +26,12 @@ public class Level1 extends JPanel {
     }
 
     private void initBoard() {
-
         addKeyListener(new TAdapter());
         setFocusable(true);
         setPreferredSize(new Dimension(Commons.WIDTH, Commons.HEIGHT));
 
+        // Load background image
+        backgroundImage = new ImageIcon("src/resources/back.jpg").getImage();
 
         gameInit();
     }
@@ -71,6 +64,8 @@ public class Level1 extends JPanel {
         super.paintComponent(g);
 
         var g2d = (Graphics2D) g;
+        g2d.drawImage(backgroundImage, 0, 0, Commons.WIDTH, Commons.HEIGHT, this);
+
 
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
@@ -88,6 +83,7 @@ public class Level1 extends JPanel {
 
         Toolkit.getDefaultToolkit().sync();
     }
+
 
     private void drawObjects(Graphics2D g2d) {
 
