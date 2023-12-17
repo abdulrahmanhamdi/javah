@@ -1,16 +1,7 @@
 package com.zetcode;
 
-import javax.swing.JPanel;
-import javax.swing.Timer;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.RenderingHints;
-import java.awt.Toolkit;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -28,17 +19,21 @@ public class Level2 extends JPanel {
     ArrayList<Brick> bricks = new ArrayList();
     private boolean inGame = true;
 
+    private Image backgroundImage;
+
+
     public Level2() {
 
         initBoard();
     }
 
     private void initBoard() {
-
-        addKeyListener(new TAdapter());
+        addKeyListener(new Level2.TAdapter());
         setFocusable(true);
         setPreferredSize(new Dimension(Commons.WIDTH, Commons.HEIGHT));
 
+        // Load background image
+        backgroundImage = new ImageIcon("src/resources/back.jpg").getImage();
 
         gameInit();
     }
