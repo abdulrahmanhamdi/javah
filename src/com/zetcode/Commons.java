@@ -10,11 +10,11 @@ public interface Commons {
 
 
 
-
+    int BALLS_NUM = 20;
     int FEATURE_WIDTH = 15;
     int INIT_PADDLE_X = 300;
     int INIT_PADDLE_Y = 560;
     int INIT_BALL_X = 230;
     int INIT_BALL_Y = 355;    
-    int PERIOD = 20;
+    int PERIOD = 10;
 }

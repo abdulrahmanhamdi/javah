@@ -13,9 +13,14 @@ public abstract class Features extends Sprite{
     }
 
     abstract void drawFeature(Graphics g);
+    abstract void activateFeature();
 
     public void move(){
         this.y += 1;
+    }
+
+    Rectangle getRect(){
+        return new Rectangle(x,y,Commons.FEATURE_WIDTH,Commons.FEATURE_WIDTH);
     }
 
 }
@@ -36,6 +41,21 @@ class ThreeBalls extends Features {
 
 
     }
+
+    @Override
+    void activateFeature() {
+        int ball_num;
+        if (Ball.balls.size() > Commons.BALLS_NUM)
+            ball_num = Commons.BALLS_NUM;
+        else{
+            ball_num = Ball.balls.size();
+        }
+        for (int i = 0; i <ball_num; i++) {
+            Ball.balls.add(new Ball(1,1,Ball.balls.get(i)));
+            Ball.balls.add(new Ball(-1,-1,Ball.balls.get(i)));
+        }
+
+    }
 }
 
 class TallerPaddle extends Features{
@@ -49,6 +69,10 @@ class TallerPaddle extends Features{
 
         g2d.setColor(Color.cyan);
         g2d.fillOval(getX(),getY(),Commons.FEATURE_WIDTH,Commons.FEATURE_WIDTH);
+    }
+
+    void activateFeature(){
+
     }
 }
 
@@ -67,4 +91,9 @@ class SmallerPaddle extends Features{
         g2d.setColor(Color.orange);
         g2d.fillOval(getX(),getY(),Commons.FEATURE_WIDTH,Commons.FEATURE_WIDTH);
     }
+
+    void activateFeature(){
+
+    }
+
 }

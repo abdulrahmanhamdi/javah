@@ -1,6 +1,7 @@
 package com.zetcode;
 
 import javax.swing.*;
+import javax.xml.catalog.CatalogFeatures;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -38,11 +39,11 @@ public class Level1 extends JPanel {
 
     private void gameInit() {
 
-
         ball = new Ball();
+        Ball.balls.add(ball);
         paddle = new Paddle();
 
-        Sprite.sprites.add(ball);
+
 
         int k = 0;
 
@@ -87,9 +88,9 @@ public class Level1 extends JPanel {
 
     private void drawObjects(Graphics2D g2d) {
 
-        for (int i = 0; i < Sprite.sprites.size() ; i++) {
-            g2d.drawImage(Sprite.sprites.get(i).getImage(), Sprite.sprites.get(i).getX(), Sprite.sprites.get(i).getY(),
-                    Sprite.sprites.get(i).getImageWidth(), Sprite.sprites.get(i).getImageHeight(), this);
+        for (int i = 0; i < Ball.balls.size() ; i++) {
+            g2d.drawImage(Ball.balls.get(i).getImage(), Ball.balls.get(i).getX(), Ball.balls.get(i).getY(),
+                    Ball.balls.get(i).getImageWidth(), Ball.balls.get(i).getImageHeight(), this);
         }
 
         g2d.drawImage(paddle.getImage(), paddle.getX(), paddle.getY(),
@@ -108,7 +109,6 @@ public class Level1 extends JPanel {
         for (int i = 0; i < Features.features.size(); i++) {
 
             Features.features.get(i).drawFeature(g2d);
-            Features.features.get(i).move();
         }
     }
 
@@ -150,10 +150,18 @@ public class Level1 extends JPanel {
 
     private void doGameCycle() {
 
-        ball.move();
+        for (int i = 0; i < Ball.balls.size(); i++) {
+            Ball.balls.get(i).move();
+        }
+
+        for (int i = 0; i < Features.features.size(); i++) {
+            Features.features.get(i).move();
+        }
         paddle.move();
         checkCollision();
         repaint();
+
+
     }
 
     private void stopGame() {
@@ -164,9 +172,13 @@ public class Level1 extends JPanel {
 
     private void checkCollision() {
 
-        if (ball.getRect().getMaxY() > Commons.BOTTOM_EDGE) {
-
+        if (Ball.balls.isEmpty())
             stopGame();
+
+        for(int i = 0 ; i < Ball.balls.size();i++) {
+            if(Ball.balls.get(i).getY() > Commons.BOTTOM_EDGE) {
+                Ball.balls.remove(i);
+            }
         }
 
         for (int i = 0, j = 0; i < Commons.N_OF_BRICKS_lvl1; i++) {
@@ -183,45 +195,48 @@ public class Level1 extends JPanel {
             }
         }
 
-        if ((ball.getRect()).intersects(paddle.getRect())){
+        for (int i = 0; i <Ball.balls.size() ; i++) {
+
+            if ((Ball.balls.get(i).getRect()).intersects(paddle.getRect())) {
 
 
-            int paddleLPos = (int) paddle.getRect().getMinX();
-            int ballLPos = (int) ball.getRect().getMinX();
+                int paddleLPos = (int) paddle.getRect().getMinX();
+                int ballLPos = (int) ball.getRect().getMinX();
 
-            int first = paddleLPos + 8;
-            int second = paddleLPos + 16;
-            int third = paddleLPos + 24;
-            int fourth = paddleLPos + 32;
+                int first = paddleLPos + 8;
+                int second = paddleLPos + 16;
+                int third = paddleLPos + 24;
+                int fourth = paddleLPos + 32;
 
-            if (ballLPos < first) {
+                if (ballLPos < first) {
 
-                ball.setXDir(-1);
-                ball.setYDir(-1);
-            }
+                    Ball.balls.get(i).setXDir(-1);
+                    Ball.balls.get(i).setYDir(-1);
+                }
 
-            if (ballLPos >= first && ballLPos < second) {
+                if (ballLPos >= first && ballLPos < second) {
 
-                ball.setXDir(-1);
-                ball.setYDir(-1 * ball.getYDir());
-            }
+                    Ball.balls.get(i).setXDir(-1);
+                    Ball.balls.get(i).setYDir(-1 * ball.getYDir());
+                }
 
-            if (ballLPos >= second && ballLPos < third) {
+                if (ballLPos >= second && ballLPos < third) {
 
-                ball.setXDir(0);
-                ball.setYDir(-1);
-            }
+                    Ball.balls.get(i).setXDir(0);
+                    Ball.balls.get(i).setYDir(-1);
+                }
 
-            if (ballLPos >= third && ballLPos < fourth) {
+                if (ballLPos >= third && ballLPos < fourth) {
 
-                ball.setXDir(1);
-                ball.setYDir(-1 * ball.getYDir());
-            }
+                    Ball.balls.get(i).setXDir(1);
+                    Ball.balls.get(i).setYDir(-1 * Ball.balls.get(i).getYDir());
+                }
 
-            if (ballLPos > fourth) {
+                if (ballLPos > fourth) {
 
-                ball.setXDir(1);
-                ball.setYDir(-1);
+                    Ball.balls.get(i).setXDir(1);
+                    Ball.balls.get(i).setYDir(-1);
+                }
             }
         }
 
@@ -229,53 +244,59 @@ public class Level1 extends JPanel {
 
         for (int i = 0; i < Commons.N_OF_BRICKS_lvl1; i++) {
 
-            if ((ball.getRect()).intersects(bricks.get(i).getRect())) {
+            for (int j = 0; j < Ball.balls.size();j++) {
 
-                int Feature_random = random.nextInt(1,10);
-                if( Feature_random >  9 && ! bricks.get(i).isDestroyed()){
-                    Features.features.add(new ThreeBalls(bricks.get(i).getX() + Commons.FEATURE_WIDTH,
+                if(Ball.balls.get(j).getRect().intersects(bricks.get(i).getRect())){
+
+                    int Feature_random = random.nextInt(1,10);
+                    if( Feature_random >  8 && ! bricks.get(i).isDestroyed()){
+                        Features.features.add(new ThreeBalls(bricks.get(i).getX() + Commons.FEATURE_WIDTH,
                                                          bricks.get(i).getY() + Commons.FEATURE_WIDTH));
-                }else if(Feature_random > 7 && ! bricks.get(i).isDestroyed()) {
-                    Features.features.add(new TallerPaddle(bricks.get(i).getX() + Commons.FEATURE_WIDTH,
+                    }else if(Feature_random > 5 && ! bricks.get(i).isDestroyed() && Feature_random < 8) {
+                        Features.features.add(new TallerPaddle(bricks.get(i).getX() + Commons.FEATURE_WIDTH,
                                                            bricks.get(i).getY() + Commons.FEATURE_WIDTH));
-                }
+                    }
 
 
-                int ballLeft = (int) ball.getRect().getMinX();
-                int ballHeight = (int) ball.getRect().getHeight();
-                int ballWidth = (int) ball.getRect().getWidth();
-                int ballTop = (int) ball.getRect().getMinY();
+                    int ballLeft = (int) Ball.balls.get(j).getRect().getMinX();
+                    int ballHeight = (int) Ball.balls.get(j).getRect().getHeight();
+                    int ballWidth = (int) Ball.balls.get(j).getRect().getWidth();
+                    int ballTop = (int) Ball.balls.get(j).getRect().getMinY();
 
-                var pointRight = new Point(ballLeft + ballWidth + 1, ballTop);
-                var pointLeft = new Point(ballLeft - 1, ballTop);
-                var pointTop = new Point(ballLeft, ballTop - 1);
-                var pointBottom = new Point(ballLeft, ballTop + ballHeight + 1);
+                    var pointRight = new Point(ballLeft + ballWidth + 1, ballTop);
+                    var pointLeft = new Point(ballLeft - 1, ballTop);
+                    var pointTop = new Point(ballLeft, ballTop - 1);
+                    var pointBottom = new Point(ballLeft, ballTop + ballHeight + 1);
 
-                if (!bricks.get(i).isDestroyed()) {
+                    if (!bricks.get(i).isDestroyed()) {
 
                     if (bricks.get(i).getRect().contains(pointRight)) {
 
-                        ball.setXDir(-1);
+                        Ball.balls.get(j).setXDir(-1);
                     } else if (bricks.get(i).getRect().contains(pointLeft)) {
 
-                        ball.setXDir(1);
+                        Ball.balls.get(j).setXDir(1);
                     }
 
                     if (bricks.get(i).getRect().contains(pointTop)) {
 
-                        ball.setYDir(1);
+                        Ball.balls.get(j).setYDir(1);
                     } else if (bricks.get(i).getRect().contains(pointBottom)) {
 
-                        ball.setYDir(-1);
+                        Ball.balls.get(j).setYDir(-1);
                     }
 
-                    bricks.get(i).setDestroyed(true);
+                        bricks.get(i).setDestroyed(true);
+                    }
                 }
             }
         }
 
         for (int i = 0; i < Features.features.size(); i++) {
             if((Features.features.get(i).getRect()).intersects(paddle.getRect()) ){
+
+                Features.features.get(i).activateFeature();
+                Features.features.remove(i);
 
             }
         }

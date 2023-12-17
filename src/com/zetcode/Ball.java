@@ -1,15 +1,40 @@
 package com.zetcode;
 
 import javax.swing.ImageIcon;
+import java.util.ArrayList;
 
 public class Ball extends Sprite {
 
     private int xdir;
     private int ydir;
 
+    public static ArrayList<Ball> balls = new ArrayList<>();
+
+
+
+
     public Ball() {
 
         initBall();
+    }
+
+    public Ball(int xdir,int ydir, Ball ball) {
+
+        initBall(xdir,ydir,ball);
+
+    }
+
+    private void initBall(int xdir,int ydir,Ball ball){
+        this.xdir = xdir;
+        this.ydir = ydir;
+
+        this.x = ball.getX();
+        this.y = ball.getY();
+
+        loadImage();
+        getImageDimensions();
+
+
     }
 
     private void initBall() {
