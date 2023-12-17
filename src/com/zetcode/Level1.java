@@ -49,6 +49,8 @@ public class Level1 extends JPanel {
         ball = new Ball();
         paddle = new Paddle();
 
+        Sprite.sprites.add(ball);
+
         int k = 0;
 
         for (int i = 0; i < 4; i++) {
@@ -89,8 +91,11 @@ public class Level1 extends JPanel {
 
     private void drawObjects(Graphics2D g2d) {
 
-        g2d.drawImage(ball.getImage(), ball.getX(), ball.getY(),
-                ball.getImageWidth(), ball.getImageHeight(), this);
+        for (int i = 0; i < Sprite.sprites.size() ; i++) {
+            g2d.drawImage(Sprite.sprites.get(i).getImage(), Sprite.sprites.get(i).getX(), Sprite.sprites.get(i).getY(),
+                    Sprite.sprites.get(i).getImageWidth(), Sprite.sprites.get(i).getImageHeight(), this);
+        }
+
         g2d.drawImage(paddle.getImage(), paddle.getX(), paddle.getY(),
                 paddle.getImageWidth(), paddle.getImageHeight(), this);
 
