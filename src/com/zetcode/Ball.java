@@ -1,12 +1,14 @@
 package com.zetcode;
 
 import javax.swing.ImageIcon;
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Ball extends Sprite {
 
     private int xdir;
     private int ydir;
+    private Image ballimage = new ImageIcon("src/resources/ball1.png").getImage();
 
     public static ArrayList<Ball> balls = new ArrayList<>();
 
@@ -31,7 +33,7 @@ public class Ball extends Sprite {
         this.x = ball.getX();
         this.y = ball.getY();
 
-        loadImage();
+        setImage(ballimage);
         getImageDimensions();
 
 
@@ -42,15 +44,9 @@ public class Ball extends Sprite {
         xdir = 1;
         ydir = -1;
 
-        loadImage();
+        setImage(ballimage);
         getImageDimensions();
         resetState();
-    }
-
-    private void loadImage() {
-
-        var ii = new ImageIcon("src/resources/ball1.png");
-        image = ii.getImage();
     }
 
     void move() {

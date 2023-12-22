@@ -14,7 +14,9 @@ public class Board extends JPanel {
     private Timer timer;
     private String message = "Game Over";
     private Ball ball;
-    private Paddle paddle;
+    public static Paddle paddle;
+
+
     private Random random = new Random();
 
 
@@ -49,10 +51,11 @@ public class Board extends JPanel {
 
         int k = 0;
 
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 20; j++) {
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 12; j++) {
                 // Pass the brick type based on your requirement (e.g., j % Commons.BRICK_IMAGES.length)
-                bricks.add(k, new Brick(j * 40 + 30, i * 10 + 50, j % Commons.BRICK_IMAGES.length));
+                bricks.add(k, new Brick(j * 40 + 30, i * 10 + 50,
+                        Commons.BRICK_IMAGES[Commons.LEVEL7[i][j]]));
                 k++;
             }
         }
@@ -89,6 +92,7 @@ public class Board extends JPanel {
 
     private void drawObjects(Graphics2D g2d) {
 
+
         for (int i = 0; i < Ball.balls.size() ; i++) {
             g2d.drawImage(Ball.balls.get(i).getImage(), Ball.balls.get(i).getX(), Ball.balls.get(i).getY(),
                     Ball.balls.get(i).getImageWidth(), Ball.balls.get(i).getImageHeight(), this);
@@ -97,7 +101,7 @@ public class Board extends JPanel {
         g2d.drawImage(paddle.getImage(), paddle.getX(), paddle.getY(),
                 paddle.getImageWidth(), paddle.getImageHeight(), this);
 
-        for (int i = 0; i < Commons.N_OF_BRICKS_lvl1; i++) {
+        for (int i = 0; i < bricks.size(); i++) {
 
             if (!bricks.get(i).isDestroyed()) {
 
@@ -110,6 +114,8 @@ public class Board extends JPanel {
         for (int i = 0; i < Features.features.size(); i++) {
 
             Features.features.get(i).drawFeature(g2d);
+            if(Features.features.get(i).getY() > Commons.BOTTOM_EDGE)
+                Features.features.remove(i);
         }
     }
 
@@ -182,14 +188,14 @@ public class Board extends JPanel {
             }
         }
 
-        for (int i = 0, j = 0; i < Commons.N_OF_BRICKS_lvl1; i++) {
+        for (int i = 0, j = 0; i < bricks.size(); i++) {
 
             if (bricks.get(i).isDestroyed()) {
 
                 j++;
             }
 
-            if (j == Commons.N_OF_BRICKS_lvl1) {
+            if (j == bricks.size()) {
 
                 message = "Victory";
                 stopGame();
@@ -243,7 +249,7 @@ public class Board extends JPanel {
 
 
 
-        for (int i = 0; i < Commons.N_OF_BRICKS_lvl1; i++) {
+        for (int i = 0; i < bricks.size(); i++) {
 
             for (int j = 0; j < Ball.balls.size();j++) {
 
@@ -253,9 +259,12 @@ public class Board extends JPanel {
                     if( Feature_random >  8 && ! bricks.get(i).isDestroyed()){
                         Features.features.add(new ThreeBalls(bricks.get(i).getX() + Commons.FEATURE_WIDTH,
                                                          bricks.get(i).getY() + Commons.FEATURE_WIDTH));
-                    }else if(Feature_random > 5 && ! bricks.get(i).isDestroyed() && Feature_random < 8) {
+                    }else if(Feature_random > 6 && ! bricks.get(i).isDestroyed() && Feature_random <= 8) {
                         Features.features.add(new TallerPaddle(bricks.get(i).getX() + Commons.FEATURE_WIDTH,
                                                            bricks.get(i).getY() + Commons.FEATURE_WIDTH));
+                    }else if(Feature_random > 4 && ! bricks.get(i).isDestroyed() && Feature_random <= 6){
+                        Features.features.add(new SmallerPaddle(bricks.get(i).getX() + Commons.FEATURE_WIDTH,
+                                bricks.get(i).getY() + Commons.FEATURE_WIDTH));
                     }
 
 
@@ -298,6 +307,7 @@ public class Board extends JPanel {
 
                 Features.features.get(i).activateFeature();
                 Features.features.remove(i);
+
 
             }
         }

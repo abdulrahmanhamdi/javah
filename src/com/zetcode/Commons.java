@@ -4,9 +4,7 @@ public interface Commons {
 
     int WIDTH = 540;
     int HEIGHT = 600;
-    int BOTTOM_EDGE = 590;
-    int N_OF_BRICKS = 240;
-    int N_OF_BRICKS_lvl1 = 80;
+    int BOTTOM_EDGE = 595;
 
     int BALLS_NUM = 20;
     int FEATURE_WIDTH = 15;
@@ -99,13 +97,13 @@ public interface Commons {
             {0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0},
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0}
     };
-      final String[] BRICK_IMAGES = {
+     String[] BRICK_IMAGES = {
+             "src/resources/brick5.png",
             "src/resources/brick.png",
             "src/resources/brick1.png",
             "src/resources/brick2.png",
             "src/resources/brick3.png",
-            "src/resources/brick4.png",
-            "src/resources/brick5.png"
+            "src/resources/brick4.png"
     };
 
 

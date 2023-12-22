@@ -1,13 +1,14 @@
 package com.zetcode;
 
+import javax.print.DocFlavor;
 import javax.swing.ImageIcon;
 
 public class Brick extends Sprite {
 
     private boolean destroyed;
-    private int brickType; // Add a variable to store the brick type
+    private String brickType; // Add a variable to store the brick type
 
-    public Brick(int x, int y, int brickType) {
+    public Brick(int x, int y, String brickType) {
         this.brickType = brickType;
         initBrick(x, y);
     }
@@ -24,8 +25,8 @@ public class Brick extends Sprite {
 
     private void loadImage() {
 
-        var ii = new ImageIcon(Commons.BRICK_IMAGES[brickType]);
-        image = ii.getImage();
+        var ii = new ImageIcon(brickType);
+        setImage(ii.getImage());
     }
 
     boolean isDestroyed() {

@@ -1,30 +1,28 @@
 package com.zetcode;
 
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
 
 public class Paddle extends Sprite  {
 
     private int dx;
+    private Image paddle = new ImageIcon("src/resources/paddle1.png").getImage();
+
 
     public Paddle() {
         
         initPaddle();        
     }
     
-    private void initPaddle() {
+    void initPaddle() {
 
-        loadImage();
+        setImage(paddle);
         getImageDimensions();
-
         resetState();
     }
-    
-    private void loadImage() {
-        
-        var ii = new ImageIcon("src/resources/paddle.png");
-        image = ii.getImage();        
-    }    
+
+
 
     void move() {
 

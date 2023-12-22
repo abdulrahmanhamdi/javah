@@ -1,7 +1,10 @@
 package com.zetcode;
 
+import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+
 
 public abstract class Features extends Sprite{
 
@@ -58,10 +61,14 @@ class ThreeBalls extends Features {
     }
 }
 
-class TallerPaddle extends Features{
+class TallerPaddle extends Features {
+
+    private Image tallpaddle = new ImageIcon("src/resources/paddle2.png").getImage();
 
     TallerPaddle(int X ,int Y){
+
         super(X, Y);
+
     }
 
     public void drawFeature(Graphics g){
@@ -73,13 +80,14 @@ class TallerPaddle extends Features{
 
     void activateFeature(){
 
+        Board.paddle.setImage(tallpaddle);
+
     }
 }
 
 class SmallerPaddle extends Features{
 
-
-
+    private Image smallpaddle = new ImageIcon("src/resources/paddle.png").getImage();
     SmallerPaddle(int X ,int Y ){
         super(X,Y);
     }
@@ -93,6 +101,7 @@ class SmallerPaddle extends Features{
     }
 
     void activateFeature(){
+        Board.paddle.setImage(smallpaddle);
 
     }
 

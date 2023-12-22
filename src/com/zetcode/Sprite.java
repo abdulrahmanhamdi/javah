@@ -10,9 +10,8 @@ public class Sprite {
     int y;
     int imageWidth;
     int imageHeight;
-    Image image;
+    private Image image;
 
-    public static ArrayList<Sprite> sprites = new ArrayList<>();
 
     
     protected void setX(int x) {
@@ -43,6 +42,11 @@ public class Sprite {
     int getImageHeight() {
 
         return imageHeight;
+    }
+
+    void setImage(Image image) {
+        this.image = image;
+        getImageDimensions();
     }
 
     Image getImage() {
