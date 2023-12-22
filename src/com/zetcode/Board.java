@@ -268,6 +268,7 @@ public class Board extends JPanel {
                     }
 
 
+
                     int ballLeft = (int) Ball.balls.get(j).getRect().getMinX();
                     int ballHeight = (int) Ball.balls.get(j).getRect().getHeight();
                     int ballWidth = (int) Ball.balls.get(j).getRect().getWidth();

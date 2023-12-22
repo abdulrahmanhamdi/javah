@@ -88,6 +88,7 @@ class TallerPaddle extends Features {
 class SmallerPaddle extends Features{
 
     private Image smallpaddle = new ImageIcon("src/resources/paddle.png").getImage();
+
     SmallerPaddle(int X ,int Y ){
         super(X,Y);
     }
