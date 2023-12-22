@@ -8,7 +8,6 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.Scanner;
 
 public class Board extends JPanel {
 
@@ -16,14 +15,12 @@ public class Board extends JPanel {
     private String message = "Game Over";
     private Ball ball;
     public static Paddle paddle;
-    private int[][] level;
 
 
     private Random random = new Random();
 
 
     private ArrayList<Brick> bricks = new ArrayList<>();
-    private int bricks_num = 0;
 
     private boolean inGame = true;
     private Image backgroundImage;
@@ -40,20 +37,11 @@ public class Board extends JPanel {
 
         // Load background image
         backgroundImage = new ImageIcon("src/resources/back.jpg").getImage();
-        level = levelchooser();
 
-        gameInit(level);
+        gameInit();
     }
 
-    private int[][] levelchooser(){
-        Scanner scan = new Scanner(System.in);
-        Levels level_list = new Levels();
-
-        System.out.println("enter the level between 1-7 : ");
-        return level_list.getlevel(scan.nextInt());
-    }
-
-    private void gameInit(int[][] level) {
+    private void gameInit() {
 
         ball = new Ball();
         Ball.balls.add(ball);
@@ -61,16 +49,14 @@ public class Board extends JPanel {
 
 
 
-
+        int k = 0;
 
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 12; j++) {
                 // Pass the brick type based on your requirement (e.g., j % Commons.BRICK_IMAGES.length)
-                if(level[i][j] != 1 ) {
-                    bricks.add(new Brick(j * 40 + 30, i * 10 + 50,
-                            Commons.BRICK_IMAGES[level[i][j]]));
-                }
-                bricks_num++;
+                bricks.add(k, new Brick(j * 40 + 30, i * 10 + 50,
+                        Commons.BRICK_IMAGES[Commons.LEVEL7[i][j]]));
+                k++;
             }
         }
 
@@ -295,21 +281,23 @@ public class Board extends JPanel {
 
                     if (!bricks.get(i).isDestroyed()) {
 
-                        if (bricks.get(i).getRect().contains(pointRight)) {
+                    if (bricks.get(i).getRect().contains(pointRight)) {
 
-                            Ball.balls.get(j).setXDir(-1);
-                        } else if (bricks.get(i).getRect().contains(pointLeft)) {
+                        Ball.balls.get(j).setXDir(-1);
+                    } else if (bricks.get(i).getRect().contains(pointLeft)) {
 
-                            Ball.balls.get(j).setXDir(1);
-                        }
+                        Ball.balls.get(j).setXDir(1);
+                    }
 
-                        if (bricks.get(i).getRect().contains(pointTop)) {
-                            Ball.balls.get(j).setYDir(1);
-                        } else if (bricks.get(i).getRect().contains(pointBottom)) {
-                            Ball.balls.get(j).setYDir(-1);
-                        }
-                        if(level[bricks_num % 10][bricks_num % 12] != 0 )
-                            bricks.get(i).setDestroyed(true);
+                    if (bricks.get(i).getRect().contains(pointTop)) {
+
+                        Ball.balls.get(j).setYDir(1);
+                    } else if (bricks.get(i).getRect().contains(pointBottom)) {
+
+                        Ball.balls.get(j).setYDir(-1);
+                    }
+
+                        bricks.get(i).setDestroyed(true);
                     }
                 }
             }
