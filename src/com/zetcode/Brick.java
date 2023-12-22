@@ -23,7 +23,7 @@ public class Brick extends Sprite {
     }
 
     private void loadImage() {
-        // Use the brickType to get the corresponding image path from BRICK_IMAGES
+
         var ii = new ImageIcon(Commons.BRICK_IMAGES[brickType]);
         image = ii.getImage();
     }
