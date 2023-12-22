@@ -1,7 +1,6 @@
 package com.zetcode;
 
 import javax.swing.*;
-import javax.xml.catalog.CatalogFeatures;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,18 +9,21 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Level1 extends JPanel {
+public class Board extends JPanel {
 
     private Timer timer;
     private String message = "Game Over";
     private Ball ball;
     private Paddle paddle;
     private Random random = new Random();
-    ArrayList<Brick> bricks = new ArrayList<>();
+
+
+    private ArrayList<Brick> bricks = new ArrayList<>();
+
     private boolean inGame = true;
     private Image backgroundImage;
 
-    public Level1() {
+    public Board() {
 
         initBoard();
     }

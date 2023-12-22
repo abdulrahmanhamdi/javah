@@ -17,29 +17,8 @@ public class Breakout extends JFrame {
     
     private void initUI() {
 
-        Scanner scan = new Scanner(System.in);
-        int level;
 
-
-
-        do{
-            System.out.println("level 1 (easy)");
-            System.out.println("level 2 (medium)");
-            System.out.println("level 3 (hard)");
-
-            System.out.println("enter the level number to choose the level : ");
-            level = scan.nextInt();
-        }while(level < 1 || level > 3);
-
-
-         if(level == 1){
-             add(new Level1());
-         }else if (level == 2){
-             add(new Level2());
-         }else {
-             add(new Level3());
-         }
-
+        add(new Board());
         setTitle("Breakout");
 
         setLocationRelativeTo(null);
@@ -52,15 +31,10 @@ public class Breakout extends JFrame {
 
     public static void main(String[] args) {
 
-
-        EventQueue.invokeLater(() -> {
-
             var game = new Breakout();
             game.setVisible(true);
 
             musicPlayer.continuesMusic();
-        });
-
 
     }
 
