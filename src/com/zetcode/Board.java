@@ -53,10 +53,12 @@ public class Board extends JPanel {
 
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 12; j++) {
-                // Pass the brick type based on your requirement (e.g., j % Commons.BRICK_IMAGES.length)
-                bricks.add(k, new Brick(j * 40 + 30, i * 10 + 50,
-                        Commons.BRICK_IMAGES[Commons.LEVEL7[i][j]]));
-                k++;
+                if(!(Commons.LEVEL3[i][j] == 0) ){
+                    bricks.add(k, new Brick(j * 40 + 30, i * 10 + 50,
+                            Commons.BRICK_IMAGES[Commons.LEVEL3[i][j]]));
+                    k++;
+                }
+
             }
         }
 
