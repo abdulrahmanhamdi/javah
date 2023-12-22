@@ -50,10 +50,9 @@ public class Board extends JPanel {
         int k = 0;
 
         for (int i = 0; i < 4; i++) {
-
             for (int j = 0; j < 20; j++) {
-
-                bricks.add(k, new Brick(j * 40 + 30, i * 10 + 50));
+                // Pass the brick type based on your requirement (e.g., j % Commons.BRICK_IMAGES.length)
+                bricks.add(k, new Brick(j * 40 + 30, i * 10 + 50, j % Commons.BRICK_IMAGES.length));
                 k++;
             }
         }
