@@ -1,4 +1,3 @@
-// Breakout.java
 package com.zetcode;
 
 import javax.swing.*;
