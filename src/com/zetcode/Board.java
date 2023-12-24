@@ -24,7 +24,10 @@ public class Board extends JPanel {
     private boolean inGame = true;
     private Image backgroundImage;
 
-    public Board() {
+    private int currentLevel;
+
+    public Board(int level) {
+        currentLevel = level;
         initBoard();
     }
 
@@ -120,8 +123,7 @@ public class Board extends JPanel {
         }
     }
 
-    public void startGame() {
-    }
+
 
 
     private class TAdapter extends KeyAdapter {

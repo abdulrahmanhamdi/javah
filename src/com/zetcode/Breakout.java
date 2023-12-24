@@ -6,6 +6,7 @@ import java.awt.*;
 public class Breakout extends JFrame {
 
     private Board board;
+    private int currentLevel;
 
     public Breakout() {
         initUI();
@@ -24,10 +25,12 @@ public class Breakout extends JFrame {
         setResizable(false);
     }
 
-    public void startGame() {
+    public void startGame(int level) {
+        this.currentLevel = level;
+
         getContentPane().removeAll();
 
-        board = new Board();
+        board = new Board(level);
         add(board);
 
         board.setFocusable(true);
@@ -38,13 +41,12 @@ public class Breakout extends JFrame {
         pack();
         setVisible(true);
 
-        board.startGame();
     }
 
     public static void main(String[] args) {
-
+        SwingUtilities.invokeLater(() -> {
             var game = new Breakout();
             game.setVisible(true);
-
+        });
     }
 }
