@@ -1,79 +1,51 @@
+// Breakout.java
 package com.zetcode;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.swing.JFrame;
-import java.awt.EventQueue;
-import java.io.File;
-import java.util.Scanner;
+import javax.swing.*;
+import java.awt.*;
 
 public class Breakout extends JFrame {
 
+    private Board board;
+
     public Breakout() {
-        
         initUI();
     }
-    
+
     private void initUI() {
+        setLayout(new BorderLayout());
 
+        StartPanel startPanel = new StartPanel(this);
+        add(startPanel, BorderLayout.CENTER);
 
-        add(new Board());
         setTitle("Breakout");
-
-        setLocationRelativeTo(null);
+        setSize(Commons.WIDTH, Commons.HEIGHT);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setResizable(true);
-        pack();
+        setLocationRelativeTo(null);
+        setResizable(false);
     }
 
+    public void startGame() {
+        getContentPane().removeAll();
 
+        board = new Board();
+        add(board);
+
+        board.setFocusable(true);
+        board.requestFocusInWindow();
+
+        SoundManager.startBackgroundMusic();
+
+        pack();
+        setVisible(true);
+
+        board.startGame();
+    }
 
     public static void main(String[] args) {
 
             var game = new Breakout();
             game.setVisible(true);
 
-            musicPlayer.continuesMusic();
-
     }
-
-
-}
-
-
-class musicPlayer{
-
-    public static void continuesMusic(){
-
-        String musicFile = "src/resources/skulls_adventure_1.wav";
-
-        try{
-            File audioFile = new File(musicFile);
-
-            AudioInputStream audioStream =  AudioSystem.getAudioInputStream(audioFile);
-
-            Clip clip =  AudioSystem.getClip();
-            clip.open(audioStream);
-
-            // Loop the music continuously
-            clip.loop(Clip.LOOP_CONTINUOUSLY);
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
-
-    }
-
-
-
-
-
-
-
-
-
-
-
 }
