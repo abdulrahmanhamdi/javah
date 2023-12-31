@@ -12,8 +12,8 @@ import java.util.Random;
 public class Board extends JPanel {
 
     private JButton tryAgainButton;
-
     private Timer timer;
+
     private Timer scoreTimer;
     private Image youWinImage;
     private Image youLoseImage;
@@ -139,7 +139,6 @@ public class Board extends JPanel {
         g2d.setColor(Color.WHITE);
         g2d.setFont(new Font("Arial", Font.PLAIN, 20));
         g2d.drawString("Score: " + score, 20, 20);
-
         g2d.drawString("Time: " + timerSeconds + "s", Commons.WIDTH - 120, 20);
     }
 
@@ -156,7 +155,7 @@ public class Board extends JPanel {
         } else {
             g2d.drawImage(youLoseImage, imageX2, imageY2, this);
 
-
+            SoundManager.playGameOverSound();
             tryAgainButton = new JButton("Try Again");
             tryAgainButton.setForeground(new Color(255, 255, 255));
             tryAgainButton.setBackground(new Color(65, 72, 134));
@@ -169,7 +168,7 @@ public class Board extends JPanel {
                 }
             });
             add(tryAgainButton);
-            SoundManager.playGameOverSound();
+
         }
     }
 
@@ -185,6 +184,7 @@ public class Board extends JPanel {
         gameInit();
         repaint();
         remove(tryAgainButton);
+        SoundManager.startBackgroundMusic();
     }
 
 
@@ -257,7 +257,8 @@ public class Board extends JPanel {
                 continue;
             }
 
-            if (Ball.balls.get(i).getX() <= 0) {
+            if (Ball.balls.get(i).getX() <= 0 ) {
+                System.out.println(Ball.balls.get(i).getX());
                 Ball.balls.get(i).setXDir(-1 * Ball.balls.get(i).getXDir());
             }
 
@@ -349,9 +350,10 @@ public class Board extends JPanel {
                         } else if (bricks.get(i).getRect().contains(pointBottom)) {
                             Ball.balls.get(j).setYDir(-1 * Ball.balls.get(j).getYDir());
                         }
-                        if(bricks.get(i).getcorr() != 0)
+                        if(bricks.get(i).getcorr() != 0) {
                             bricks.get(i).setDestroyed(true);
-                        score+=5;
+                            score+=5;
+                        }
                     }
                 }
             }

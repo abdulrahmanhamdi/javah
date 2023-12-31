@@ -2,9 +2,8 @@ package com.zetcode;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Random;
 
 
 public abstract class Features extends Sprite{
@@ -49,14 +48,17 @@ class ThreeBalls extends Features {
     @Override
     void activateFeature() {
         int ball_num;
+        Random r = new Random();
+
         if (Ball.balls.size() > Commons.BALLS_NUM)
             ball_num = Commons.BALLS_NUM;
         else{
             ball_num = Ball.balls.size();
         }
         for (int i = 0; i <ball_num; i++) {
-            Ball.balls.add(new Ball(-1,1,Ball.balls.get(i)));
-            Ball.balls.add(new Ball(-1,2,Ball.balls.get(i)));
+            Ball.balls.add(new Ball(r.nextInt(0,4), r.nextInt(-2,0),Ball.balls.get(i)));
+            Ball.balls.add(new Ball(r.nextInt(0,4), r.nextInt(-2,0),Ball.balls.get(i)));
+
         }
 
     }
@@ -65,7 +67,6 @@ class ThreeBalls extends Features {
 class TallerPaddle extends Features {
 
     private Image tallpaddle = new ImageIcon("src/resources/paddle2.png").getImage();
-    private Image normalpaddle = new ImageIcon("src/resources/paddle1.png").getImage();
 
     TallerPaddle(int X ,int Y){
 
@@ -121,14 +122,13 @@ class FasterBalls extends Features{
     void drawFeature(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
 
-        g2d.setColor(Color.DARK_GRAY);
+        g2d.setColor(Color.GRAY);
         g2d.fillOval(getX(),getY(),Commons.FEATURE_WIDTH,Commons.FEATURE_WIDTH);
     }
 
     void activateFeature(){
         for (int i = 0; i < Ball.balls.size(); i++) {
-            Ball.balls.get(i).setXDir(3);
-            Ball.balls.get(i).setYDir(3);
+            Ball.balls.get(i).setYDir(-3);
         }
 
     }
