@@ -11,9 +11,12 @@ import java.util.Random;
 
 public class Board extends JPanel {
 
+    private JButton tryAgainButton;
+
     private Timer timer;
-    private Image gameOverImage;
-    private Image victoryImage;
+    private Timer scoreTimer;
+    private Image youWinImage;
+    private Image youLoseImage;
     private Ball ball;
     public static Paddle paddle;
     private int levelNumber;
@@ -21,12 +24,19 @@ public class Board extends JPanel {
 
     private int bricksNum=0;
 
+
     private Random random = new Random();
 
     private ArrayList<Brick> bricks = new ArrayList<>();
 
     private boolean inGame = true;
     private Image backgroundImage;
+
+    private int currentLevel;
+    private int score = 0;
+    private int timerSeconds = 0;
+    private boolean youWin = true;
+
 
     public Board(int level) {
         levelNumber =level;
@@ -39,8 +49,8 @@ public class Board extends JPanel {
         setPreferredSize(new Dimension(Commons.WIDTH, Commons.HEIGHT));
 
         backgroundImage = new ImageIcon("src/resources/back.jpg").getImage();
-        gameOverImage = new ImageIcon("src/resources/you_lose.png").getImage();
-        victoryImage = new ImageIcon("src/resources/you_win.png").getImage();
+        youLoseImage = new ImageIcon("src/resources/you_lose.png").getImage();
+        youWinImage = new ImageIcon("src/resources/you_win.png").getImage();
 
         gameInit();
     }
@@ -56,6 +66,15 @@ public class Board extends JPanel {
 
         timer = new Timer(Commons.PERIOD, new GameCycle());
         timer.start();
+
+        scoreTimer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                timerSeconds++;
+
+            }
+        });
+        scoreTimer.start();
     }
 
     private void loadbricks(int[][] level){
@@ -63,7 +82,7 @@ public class Board extends JPanel {
         for (int i = 0; i < level.length; i++) {
             for (int j = 0; j < level[i].length; j++) {
                 if ((level[i][j] != -1)) {
-                    bricks.add(bricksNum, new Brick(j * 40 + 30, i* 10 + 50, level[i][j],
+                    bricks.add( new Brick(j * 40 + 30, i* 10 + 50, level[i][j],
                             Commons.BRICK_IMAGES[level[i][j]]));
 
                 }
@@ -116,19 +135,56 @@ public class Board extends JPanel {
             if (Features.features.get(i).getY() > Commons.BOTTOM_EDGE)
                 Features.features.remove(i);
         }
+
+        g2d.setColor(Color.WHITE);
+        g2d.setFont(new Font("Arial", Font.PLAIN, 20));
+        g2d.drawString("Score: " + score, 20, 20);
+
+        g2d.drawString("Time: " + timerSeconds + "s", Commons.WIDTH - 120, 20);
     }
 
-    private void gameFinished(Graphics2D g2d) {
-        int imageX = (Commons.WIDTH - victoryImage.getWidth(this)) / 2;
-        int imageY = (Commons.HEIGHT - victoryImage.getHeight(this)) / 2;
 
-        if (inGame) {
-            g2d.drawImage(victoryImage, imageX, imageY, this);
+    private void gameFinished(Graphics2D g2d) {
+        int imageX1 = ((Commons.WIDTH - youWinImage.getWidth(this)) / 2);
+        int imageY1 = (Commons.HEIGHT - youWinImage.getHeight(this)) / 2;
+        int imageX2 = (Commons.WIDTH - youLoseImage.getWidth(this)) / 2;
+        int imageY2 = (Commons.HEIGHT - youLoseImage.getHeight(this)) / 2;
+
+        if (youWin) {
+            g2d.drawImage(youWinImage, imageX1, imageY1, this);
             SoundManager.playVictorySound();
         } else {
-            g2d.drawImage(gameOverImage, imageX, imageY, this);
+            g2d.drawImage(youLoseImage, imageX2, imageY2, this);
+
+
+            tryAgainButton = new JButton("Try Again");
+            tryAgainButton.setForeground(new Color(255, 255, 255));
+            tryAgainButton.setBackground(new Color(65, 72, 134));
+            tryAgainButton.setFont(new Font("Arial", Font.PLAIN, 16));
+            tryAgainButton.setBounds((Commons.WIDTH - 100) / 2, imageY2 + youLoseImage.getHeight(this) + 20, 120, 30);
+            tryAgainButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    restartGame();
+                }
+            });
+            add(tryAgainButton);
             SoundManager.playGameOverSound();
         }
+    }
+
+    private void restartGame() {
+        inGame = true;
+        youWin = true;
+        score = 0;
+        timerSeconds = 0;
+        bricksNum = 0;
+        bricks.clear();
+        Features.features.clear();
+        Ball.balls.clear();
+        gameInit();
+        repaint();
+        remove(tryAgainButton);
     }
 
 
@@ -201,8 +257,7 @@ public class Board extends JPanel {
                 continue;
             }
 
-            if (Ball.balls.get(i).getX() <= 0 ) {
-                System.out.println(Ball.balls.get(i).getX());
+            if (Ball.balls.get(i).getX() <= 0) {
                 Ball.balls.get(i).setXDir(-1 * Ball.balls.get(i).getXDir());
             }
 
@@ -213,7 +268,10 @@ public class Board extends JPanel {
             if (Ball.balls.get(i).getY() <= 0) {
                 Ball.balls.get(i).setYDir(-1 * Ball.balls.get(i).getYDir());
             }
-
+        }
+        if (Ball.balls.isEmpty()) {
+            stopGame();
+            youWin = false;
         }
 
         for (int i = 0, j = 0; i < bricks.size(); i++) {
@@ -222,7 +280,8 @@ public class Board extends JPanel {
             }
 
             if (j == bricks.size()) {
-                inGame = true;
+                stopGame();
+                youWin = true;
             }
         }
 
@@ -242,21 +301,21 @@ public class Board extends JPanel {
 
                 if (ballLPos >= first && ballLPos < second) {
                     Ball.balls.get(i).setXDir(random.nextInt(1,3) * (-1));
-                    Ball.balls.get(i).setYDir(random.nextInt(1,2) * (-1));
+                    Ball.balls.get(i).setYDir(random.nextInt(1,3) * (-1));
                 }
 
                 if (ballLPos >= second && ballLPos < third) {
-                    Ball.balls.get(i).setXDir(random.nextInt(1,3) * (0));
-                    Ball.balls.get(i).setYDir(random.nextInt(1,2) * (-1));
+                    Ball.balls.get(i).setXDir(0);
+                    Ball.balls.get(i).setYDir( -3);
                 }
 
                 if (ballLPos >= third && ballLPos < fourth) {
                     Ball.balls.get(i).setXDir(random.nextInt(1,3) * (-1));
-                    Ball.balls.get(i).setYDir(random.nextInt(1,2) * (-1));
+                    Ball.balls.get(i).setYDir(random.nextInt(1,3) * (-1));
                 }
 
                 if (ballLPos > fourth) {
-                    Ball.balls.get(i).setXDir(random.nextInt(1,2));
+                    Ball.balls.get(i).setXDir(random.nextInt(1,3));
                     Ball.balls.get(i).setYDir(random.nextInt(1,3) * (-1));
                 }
             }
@@ -292,6 +351,7 @@ public class Board extends JPanel {
                         }
                         if(bricks.get(i).getcorr() != 0)
                             bricks.get(i).setDestroyed(true);
+                        score+=5;
                     }
                 }
             }
@@ -305,3 +365,4 @@ public class Board extends JPanel {
         }
     }
 }
+
