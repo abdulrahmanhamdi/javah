@@ -41,8 +41,8 @@ public class Ball extends Sprite {
 
     private void initBall() {
         
-        xdir = 1;
-        ydir = -1;
+        xdir = Commons.BALL_SPEED;
+        ydir = -Commons.BALL_SPEED;
 
         setImage(ballimage);
         getImageDimensions();
@@ -54,21 +54,6 @@ public class Ball extends Sprite {
         x += xdir;
         y += ydir;
 
-        if (x == 0) {
-
-            setXDir(1);
-        }
-
-        if (x == Commons.WIDTH - imageWidth) {
-
-            System.out.println(imageWidth);
-            setXDir(-1);
-        }
-
-        if (y == 0) {
-
-            setYDir(1);
-        }
     }
 
     private void resetState() {
@@ -78,17 +63,17 @@ public class Ball extends Sprite {
     }
 
     void setXDir(int x) {
-
         xdir = x;
+    }
+    int getXDir(){
+        return xdir;
     }
 
     void setYDir(int y) {
-
         ydir = y;
     }
 
     int getYDir() {
-
         return ydir;
     }
 }

@@ -6,7 +6,6 @@ import java.awt.*;
 public class Breakout extends JFrame {
 
     private Board board;
-    private int currentLevel;
 
     public Breakout() {
         initUI();
@@ -26,8 +25,6 @@ public class Breakout extends JFrame {
     }
 
     public void startGame(int level) {
-        this.currentLevel = level;
-
         getContentPane().removeAll();
 
         board = new Board(level);
@@ -44,9 +41,9 @@ public class Breakout extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
+
             var game = new Breakout();
             game.setVisible(true);
-        });
+
     }
 }

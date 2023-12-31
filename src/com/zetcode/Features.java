@@ -3,6 +3,7 @@ package com.zetcode;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.time.Duration;
 import java.util.ArrayList;
 
 
@@ -54,8 +55,8 @@ class ThreeBalls extends Features {
             ball_num = Ball.balls.size();
         }
         for (int i = 0; i <ball_num; i++) {
-            Ball.balls.add(new Ball(1,1,Ball.balls.get(i)));
-            Ball.balls.add(new Ball(-1,-1,Ball.balls.get(i)));
+            Ball.balls.add(new Ball(-1,1,Ball.balls.get(i)));
+            Ball.balls.add(new Ball(-1,2,Ball.balls.get(i)));
         }
 
     }
@@ -64,6 +65,7 @@ class ThreeBalls extends Features {
 class TallerPaddle extends Features {
 
     private Image tallpaddle = new ImageIcon("src/resources/paddle2.png").getImage();
+    private Image normalpaddle = new ImageIcon("src/resources/paddle1.png").getImage();
 
     TallerPaddle(int X ,int Y){
 
@@ -105,5 +107,31 @@ class SmallerPaddle extends Features{
         Board.paddle.setImage(smallpaddle);
 
     }
+
+}
+
+
+class FasterBalls extends Features{
+
+    FasterBalls(int X ,int Y ){
+        super(X,Y);
+    }
+
+    @Override
+    void drawFeature(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g;
+
+        g2d.setColor(Color.DARK_GRAY);
+        g2d.fillOval(getX(),getY(),Commons.FEATURE_WIDTH,Commons.FEATURE_WIDTH);
+    }
+
+    void activateFeature(){
+        for (int i = 0; i < Ball.balls.size(); i++) {
+            Ball.balls.get(i).setXDir(3);
+            Ball.balls.get(i).setYDir(3);
+        }
+
+    }
+
 
 }

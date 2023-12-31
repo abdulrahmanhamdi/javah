@@ -16,6 +16,10 @@ public class Board extends JPanel {
     private Image victoryImage;
     private Ball ball;
     public static Paddle paddle;
+    private int levelNumber;
+    private int[][] level;
+
+    private int bricksNum=0;
 
     private Random random = new Random();
 
@@ -24,10 +28,8 @@ public class Board extends JPanel {
     private boolean inGame = true;
     private Image backgroundImage;
 
-    private int currentLevel;
-
     public Board(int level) {
-        currentLevel = level;
+        levelNumber =level;
         initBoard();
     }
 
@@ -47,21 +49,27 @@ public class Board extends JPanel {
         ball = new Ball();
         Ball.balls.add(ball);
         paddle = new Paddle();
+        Levels levelsList = new Levels();
+        level = levelsList.getlevel(levelNumber);
 
-        int k = 0;
-
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 12; j++) {
-                if (!(Commons.LEVEL3[i][j] == 0)) {
-                    bricks.add(k, new Brick(j * 40 + 30, i * 10 + 50,
-                            Commons.BRICK_IMAGES[Commons.LEVEL3[i][j]]));
-                    k++;
-                }
-            }
-        }
+        loadbricks(level);
 
         timer = new Timer(Commons.PERIOD, new GameCycle());
         timer.start();
+    }
+
+    private void loadbricks(int[][] level){
+
+        for (int i = 0; i < level.length; i++) {
+            for (int j = 0; j < level[i].length; j++) {
+                if ((level[i][j] != -1)) {
+                    bricks.add(bricksNum, new Brick(j * 40 + 30, i* 10 + 50, level[i][j],
+                            Commons.BRICK_IMAGES[level[i][j]]));
+
+                }
+                bricksNum++;
+            }
+        }
     }
 
     @Override
@@ -124,8 +132,6 @@ public class Board extends JPanel {
     }
 
 
-
-
     private class TAdapter extends KeyAdapter {
         @Override
         public void keyReleased(KeyEvent e) {
@@ -164,6 +170,27 @@ public class Board extends JPanel {
         SoundManager.stopBackgroundMusic();
     }
 
+    void controlFeature(int i){
+        if (bricks.get(i).getcorr() != 0) {
+
+            int Feature_random = random.nextInt(0, 15);
+            if (Feature_random == 14 && !bricks.get(i).isDestroyed()) {
+                Features.features.add(new ThreeBalls(bricks.get(i).getX() + Commons.FEATURE_WIDTH,
+                        bricks.get(i).getY() + Commons.FEATURE_WIDTH));
+            } else if (Feature_random == 13 && !bricks.get(i).isDestroyed() ) {
+                Features.features.add(new TallerPaddle(bricks.get(i).getX() + Commons.FEATURE_WIDTH,
+                        bricks.get(i).getY() + Commons.FEATURE_WIDTH));
+            } else if (Feature_random == 12 && !bricks.get(i).isDestroyed() ) {
+                Features.features.add(new SmallerPaddle(bricks.get(i).getX() + Commons.FEATURE_WIDTH,
+                        bricks.get(i).getY() + Commons.FEATURE_WIDTH));
+            } else if (Feature_random == 11 && !bricks.get(i).isDestroyed()) {
+                Features.features.add(new FasterBalls(bricks.get(i).getX() + Commons.FEATURE_WIDTH,
+                        bricks.get(i).getY() + Commons.FEATURE_WIDTH));
+            }
+        }
+
+    }
+
     private void checkCollision() {
         if (Ball.balls.isEmpty())
             stopGame();
@@ -171,7 +198,22 @@ public class Board extends JPanel {
         for (int i = 0; i < Ball.balls.size(); i++) {
             if (Ball.balls.get(i).getY() > Commons.BOTTOM_EDGE) {
                 Ball.balls.remove(i);
+                continue;
             }
+
+            if (Ball.balls.get(i).getX() <= 0 ) {
+                System.out.println(Ball.balls.get(i).getX());
+                Ball.balls.get(i).setXDir(-1 * Ball.balls.get(i).getXDir());
+            }
+
+            if (Ball.balls.get(i).getX() >= Commons.WIDTH - 16) {
+                Ball.balls.get(i).setXDir(-1 * Ball.balls.get(i).getXDir());
+            }
+
+            if (Ball.balls.get(i).getY() <= 0) {
+                Ball.balls.get(i).setYDir(-1 * Ball.balls.get(i).getYDir());
+            }
+
         }
 
         for (int i = 0, j = 0; i < bricks.size(); i++) {
@@ -180,7 +222,7 @@ public class Board extends JPanel {
             }
 
             if (j == bricks.size()) {
-                stopGame();
+                inGame = true;
             }
         }
 
@@ -188,34 +230,34 @@ public class Board extends JPanel {
             if ((Ball.balls.get(i).getRect()).intersects(paddle.getRect())) {
                 int paddleLPos = (int) paddle.getRect().getMinX();
                 int ballLPos = (int) ball.getRect().getMinX();
-                int first = paddleLPos + 8;
+                int first = paddleLPos + 6;
                 int second = paddleLPos + 16;
                 int third = paddleLPos + 24;
-                int fourth = paddleLPos + 32;
+                int fourth = paddleLPos + 34;
 
                 if (ballLPos < first) {
-                    Ball.balls.get(i).setXDir(-1);
-                    Ball.balls.get(i).setYDir(-1);
+                    Ball.balls.get(i).setXDir(random.nextInt(1,3));
+                    Ball.balls.get(i).setYDir(random.nextInt(1,3) * (-1));
                 }
 
                 if (ballLPos >= first && ballLPos < second) {
-                    Ball.balls.get(i).setXDir(-1);
-                    Ball.balls.get(i).setYDir(-1 * ball.getYDir());
+                    Ball.balls.get(i).setXDir(random.nextInt(1,3) * (-1));
+                    Ball.balls.get(i).setYDir(random.nextInt(1,2) * (-1));
                 }
 
                 if (ballLPos >= second && ballLPos < third) {
-                    Ball.balls.get(i).setXDir(0);
-                    Ball.balls.get(i).setYDir(-1);
+                    Ball.balls.get(i).setXDir(random.nextInt(1,3) * (0));
+                    Ball.balls.get(i).setYDir(random.nextInt(1,2) * (-1));
                 }
 
                 if (ballLPos >= third && ballLPos < fourth) {
-                    Ball.balls.get(i).setXDir(1);
-                    Ball.balls.get(i).setYDir(-1 * Ball.balls.get(i).getYDir());
+                    Ball.balls.get(i).setXDir(random.nextInt(1,3) * (-1));
+                    Ball.balls.get(i).setYDir(random.nextInt(1,2) * (-1));
                 }
 
                 if (ballLPos > fourth) {
-                    Ball.balls.get(i).setXDir(1);
-                    Ball.balls.get(i).setYDir(-1);
+                    Ball.balls.get(i).setXDir(random.nextInt(1,2));
+                    Ball.balls.get(i).setYDir(random.nextInt(1,3) * (-1));
                 }
             }
         }
@@ -223,17 +265,8 @@ public class Board extends JPanel {
         for (int i = 0; i < bricks.size(); i++) {
             for (int j = 0; j < Ball.balls.size(); j++) {
                 if (Ball.balls.get(j).getRect().intersects(bricks.get(i).getRect())) {
-                    int Feature_random = random.nextInt(1, 10);
-                    if (Feature_random > 8 && !bricks.get(i).isDestroyed()) {
-                        Features.features.add(new ThreeBalls(bricks.get(i).getX() + Commons.FEATURE_WIDTH,
-                                bricks.get(i).getY() + Commons.FEATURE_WIDTH));
-                    } else if (Feature_random > 6 && !bricks.get(i).isDestroyed() && Feature_random <= 8) {
-                        Features.features.add(new TallerPaddle(bricks.get(i).getX() + Commons.FEATURE_WIDTH,
-                                bricks.get(i).getY() + Commons.FEATURE_WIDTH));
-                    } else if (Feature_random > 4 && !bricks.get(i).isDestroyed() && Feature_random <= 6) {
-                        Features.features.add(new SmallerPaddle(bricks.get(i).getX() + Commons.FEATURE_WIDTH,
-                                bricks.get(i).getY() + Commons.FEATURE_WIDTH));
-                    }
+
+                    controlFeature(i);
 
                     int ballLeft = (int) Ball.balls.get(j).getRect().getMinX();
                     int ballHeight = (int) Ball.balls.get(j).getRect().getHeight();
@@ -247,18 +280,18 @@ public class Board extends JPanel {
 
                     if (!bricks.get(i).isDestroyed()) {
                         if (bricks.get(i).getRect().contains(pointRight)) {
-                            Ball.balls.get(j).setXDir(-1);
+                            Ball.balls.get(j).setXDir(-1 * Ball.balls.get(j).getXDir());
                         } else if (bricks.get(i).getRect().contains(pointLeft)) {
-                            Ball.balls.get(j).setXDir(1);
+                            Ball.balls.get(j).setXDir(-1 * Ball.balls.get(j).getXDir());
                         }
 
                         if (bricks.get(i).getRect().contains(pointTop)) {
-                            Ball.balls.get(j).setYDir(1);
+                            Ball.balls.get(j).setYDir(-1 * Ball.balls.get(j).getYDir());
                         } else if (bricks.get(i).getRect().contains(pointBottom)) {
-                            Ball.balls.get(j).setYDir(-1);
+                            Ball.balls.get(j).setYDir(-1 * Ball.balls.get(j).getYDir());
                         }
-
-                        bricks.get(i).setDestroyed(true);
+                        if(bricks.get(i).getcorr() != 0)
+                            bricks.get(i).setDestroyed(true);
                     }
                 }
             }

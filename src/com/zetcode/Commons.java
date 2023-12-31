@@ -5,8 +5,11 @@ public interface Commons {
     int WIDTH = 540;
     int HEIGHT = 600;
     int BOTTOM_EDGE = 595;
+    int BALL_SPEED = 2;
 
     int BALLS_NUM = 20;
+
+    int FEATURE_TIME = 15;
     int FEATURE_WIDTH = 15;
     int INIT_PADDLE_X = 300;
     int INIT_PADDLE_Y = 560;

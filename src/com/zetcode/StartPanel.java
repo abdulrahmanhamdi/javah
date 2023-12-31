@@ -1,5 +1,5 @@
 package com.zetcode;
-//
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -18,7 +18,6 @@ public class StartPanel extends JPanel {
         setLayout(new BorderLayout());
         addBackgroundPanel();
     }
-
 
     private void addBackgroundPanel() {
         JPanel backgroundPanel = new JPanel() {
@@ -83,15 +82,12 @@ public class StartPanel extends JPanel {
         int levelButtonWidth = 100;
         int levelButtonHeight = 30;
 
-        int totalLevels = 7;
-
-        for (int i = 1; i <= totalLevels; i++) {
+        for (int i = 1; i <= 7; i++) {
             JButton levelButton = createLevelButton(i);
             levelButton.setBounds(levelButtonX, levelButtonY + (i - 1) * 40, levelButtonWidth, levelButtonHeight);
             panel.add(levelButton);
         }
     }
-
 
     private JButton createLevelButton(int level) {
         JButton levelButton = new JButton("Level " + level);
