@@ -32,7 +32,6 @@ public class Board extends JPanel {
     private boolean inGame = true;
     private Image backgroundImage;
 
-    private int currentLevel;
     private int score = 0;
     private int timerSeconds = 0;
     private boolean youWin = true;
@@ -81,8 +80,8 @@ public class Board extends JPanel {
 
         for (int i = 0; i < level.length; i++) {
             for (int j = 0; j < level[i].length; j++) {
-                if ((level[i][j] != -1)) {
-                    bricks.add( new Brick(j * 40 + 30, i* 10 + 50, level[i][j],
+                if (level[i][j] != -1  ) {
+                    bricks.add(new Brick(j * 40 + 30, i* 10 + 50, level[i][j],
                             Commons.BRICK_IMAGES[level[i][j]]));
 
                 }
@@ -123,7 +122,7 @@ public class Board extends JPanel {
                 paddle.getImageWidth(), paddle.getImageHeight(), this);
 
         for (int i = 0; i < bricks.size(); i++) {
-            if (!bricks.get(i).isDestroyed()) {
+            if (!bricks.get(i).isDestroyed() ){
                 g2d.drawImage(bricks.get(i).getImage(), bricks.get(i).getX(),
                         bricks.get(i).getY(), bricks.get(i).getImageWidth(),
                         bricks.get(i).getImageHeight(), this);
@@ -248,8 +247,10 @@ public class Board extends JPanel {
     }
 
     private void checkCollision() {
-        if (Ball.balls.isEmpty())
+        if (Ball.balls.isEmpty()) {
             stopGame();
+            youWin = false;
+        }
 
         for (int i = 0; i < Ball.balls.size(); i++) {
             if (Ball.balls.get(i).getY() > Commons.BOTTOM_EDGE) {
@@ -270,30 +271,26 @@ public class Board extends JPanel {
                 Ball.balls.get(i).setYDir(-1 * Ball.balls.get(i).getYDir());
             }
         }
-        if (Ball.balls.isEmpty()) {
-            stopGame();
-            youWin = false;
-        }
+
 
         for (int i = 0, j = 0; i < bricks.size(); i++) {
-            if (bricks.get(i).isDestroyed()) {
+            if (bricks.get(i).isDestroyed() || bricks.get(i).getcorr() == 0) {
                 j++;
             }
 
             if (j == bricks.size()) {
                 stopGame();
-                youWin = true;
             }
         }
 
         for (int i = 0; i < Ball.balls.size(); i++) {
             if ((Ball.balls.get(i).getRect()).intersects(paddle.getRect())) {
-                int paddleLPos = (int) paddle.getRect().getMinX();
+                int paddleLPos = (int) (paddle.getRect().getMinX()/paddle.getRect().getMaxX());
                 int ballLPos = (int) ball.getRect().getMinX();
-                int first = paddleLPos + 6;
-                int second = paddleLPos + 16;
-                int third = paddleLPos + 24;
-                int fourth = paddleLPos + 34;
+                int first = paddleLPos * 10/100 ;
+                int second = paddleLPos * 50/ 100 ;
+                int third = paddleLPos * 60/100;
+                int fourth = paddleLPos * 90/100;
 
                 if (ballLPos < first) {
                     Ball.balls.get(i).setXDir(random.nextInt(1,3));
@@ -307,7 +304,7 @@ public class Board extends JPanel {
 
                 if (ballLPos >= second && ballLPos < third) {
                     Ball.balls.get(i).setXDir(0);
-                    Ball.balls.get(i).setYDir( -3);
+                    Ball.balls.get(i).setYDir(-3);
                 }
 
                 if (ballLPos >= third && ballLPos < fourth) {
@@ -338,7 +335,8 @@ public class Board extends JPanel {
                     var pointTop = new Point(ballLeft, ballTop - 1);
                     var pointBottom = new Point(ballLeft, ballTop + ballHeight + 1);
 
-                    if (!bricks.get(i).isDestroyed()) {
+                    if (!bricks.get(i).isDestroyed() || bricks.get(i).getcorr() == 0) {
+
                         if (bricks.get(i).getRect().contains(pointRight)) {
                             Ball.balls.get(j).setXDir(-1 * Ball.balls.get(j).getXDir());
                         } else if (bricks.get(i).getRect().contains(pointLeft)) {

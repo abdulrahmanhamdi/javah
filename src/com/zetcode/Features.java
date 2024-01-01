@@ -50,16 +50,15 @@ class ThreeBalls extends Features {
         int ball_num;
         Random r = new Random();
 
-        if (Ball.balls.size() > Commons.BALLS_NUM)
-            ball_num = Commons.BALLS_NUM;
-        else{
+        if (Ball.balls.size() < Commons.BALLS_NUM) {
             ball_num = Ball.balls.size();
-        }
-        for (int i = 0; i <ball_num; i++) {
-            Ball.balls.add(new Ball(r.nextInt(0,4), r.nextInt(-2,0),Ball.balls.get(i)));
-            Ball.balls.add(new Ball(r.nextInt(0,4), r.nextInt(-2,0),Ball.balls.get(i)));
+            for (int i = 0; i <ball_num; i++) {
+                Ball.balls.add(new Ball(r.nextInt(1,4), r.nextInt(-2,0),Ball.balls.get(i)));
+                Ball.balls.add(new Ball(r.nextInt(1,4), r.nextInt(-2,0),Ball.balls.get(i)));
 
+            }
         }
+
 
     }
 }
@@ -128,7 +127,7 @@ class FasterBalls extends Features{
 
     void activateFeature(){
         for (int i = 0; i < Ball.balls.size(); i++) {
-            Ball.balls.get(i).setYDir(-3);
+            Ball.balls.get(i).setYDir(-2);
         }
 
     }
